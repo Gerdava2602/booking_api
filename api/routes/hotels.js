@@ -1,63 +1,30 @@
 const express = require('express');
-const Hotel = require('../models/hotels');
-
+const {
+    createHotel,
+    updateHotel,
+    deleteHotel,
+    getAllHotels,
+    getHotel
+} = require('../controllers/hotel');
+const { verifyAdmin } = require('../utils/verifyToken');
 
 const router = express.Router();
 
 //CRUD Operations
 //Create
-router.post('/', async (req, res, next) => {
-    const newHotel = new Hotel(req.body);
-    try{
-        const savedHotel = await newHotel.save();
-        res.status(200).json(savedHotel);
-    }catch(error){
-        next(error);
-    }
-})
+router.post('/', verifyAdmin,createHotel)
 
 //UPDATE
-router.put('/:id', async (req, res, next) => {
-    try{
-        const updateHotel = await Hotel.findByIdAndUpdate(
-            req.params.id, 
-            {$set: req.body}, 
-            {new: true});
-        res.status(200).json(updateHotel);
-    }catch(error){
-        next(error);
-    }
-})
+router.put('/:id', verifyAdmin,updateHotel)
 
 //DELETE
-router.delete('/:id', async (req, res, next) => {
-    try{
-         await Hotel.findByIdAndDelete(req.params.id);
-        res.status(200).json("Hotel deleted");
-    }catch(error){
-        next(error)
-    }
-})
+router.delete('/:id', verifyAdmin,deleteHotel)
 
 //Get All
-router.get('/', async (req, res, next) => {
-    try{
-        const allHotels = await Hotel.find();
-        res.status(200).json(allHotels);
-    }catch(error){
-        next(error);
-    }
-})
+router.get('/', getAllHotels)
 
-//Get All
-router.get('/:id', async (req, res, next) => {
-    try{
-        const hotel = await Hotel.findById(req.params.id);
-        res.status(200).json(hotel);
-    }catch(error){
-        next(error)
-    }
-})
+//Get One
+router.get('/:id', getHotel)
 
 
 module.exports = router

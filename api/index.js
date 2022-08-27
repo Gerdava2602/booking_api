@@ -5,12 +5,15 @@ const authRouter = require('./routes/auth');
 const roomsRouter = require('./routes/rooms');
 const hotelsRouter = require('./routes/hotels');
 const usersRouter = require('./routes/users');
+const cookieParser = require('cookie-parser');
+
 
 app = express();
 dotenv.config();
 
 //Middleware
 
+app.use(cookieParser())
 //Handle JSON
 app.use(express.json())
 
