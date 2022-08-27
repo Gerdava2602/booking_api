@@ -10,11 +10,28 @@ app = express();
 dotenv.config();
 
 //Middleware
+
+//Handle JSON
+app.use(express.json())
+
+//Routes
 app.use("/api/auth", authRouter);
 app.use("/api/rooms", roomsRouter);
 app.use("/api/hotels",hotelsRouter);
 app.use("/api/users", usersRouter);
 
+//Handle errors
+app.use((err, req, res, next) => {
+    //If there is no status, this will be 500
+    const errorStatus = err.statusCode || 500;
+    const errorMessage = err.message|| "Something went wrong";
+    return res.status(errorStatus).json({
+        success: false,
+        status: errorStatus,
+        message: errorMessage,
+        stack: err.stack
+    })
+})
 
 const connect = async () => {
     try{
