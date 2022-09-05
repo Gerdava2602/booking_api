@@ -6,13 +6,14 @@ const roomsRouter = require('./routes/rooms');
 const hotelsRouter = require('./routes/hotels');
 const usersRouter = require('./routes/users');
 const cookieParser = require('cookie-parser');
-
+const cors = require('cors');
 
 app = express();
 dotenv.config();
 
 //Middleware
 
+app.use(cors())
 app.use(cookieParser())
 //Handle JSON
 app.use(express.json())

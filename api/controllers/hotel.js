@@ -48,10 +48,23 @@ const getHotel = async (req, res, next) => {
         next(error)
     }
 }
+
+const countByCity = async (req, res, next) => {
+    const cities = req.query.cities.split(",");
+    try {
+        const list = await Promise.all(cities.map(city=>{
+            return Hotel.countDocuments({city: city});
+        }))
+        res.status(200).json(list);
+    }catch(error){
+        next(error)
+    }
+}
 module.exports = {
     createHotel,
     updateHotel,
     deleteHotel,
     getAllHotels,
-    getHotel
+    getHotel,
+    countByCity
 }
